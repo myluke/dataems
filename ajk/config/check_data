@@ -1,0 +1,39 @@
+# coding=utf-8
+fromm pymongo import MongoClient
+import logging
+import pymysql
+
+MONGO_HOST = '127.0.0.1'
+MONGO_PORT = 27017
+MySQL_HOST = 'localhost'
+MySQL_PORT = 3306
+
+logging.basicConfig(level=logging.INFO, filename='check_data.txt')
+
+
+def check():
+    mysql_db = pymysql.connect(host=MySQL_HOST, port=MySQL_PORT, user='root', password='Zetta12345', database='ajk', charset='utf8')
+    cursor = mysql_db.cursor()
+    names = []
+    client = MongoClient(MONGO_HOST, MONGO_PORT)
+    db = client['ajk']
+    for item in db['ershou'].find():
+        name = item['house_name']
+        price = item['house_price']
+        sql = 'INSERT INTO anjuke(house_name, house_price) VALUES (%s, %s)'
+        # try:
+        cursor.execute(sql, (name, price))
+        mysql_db.commit()
+        # except:
+        #     pass
+        if name not in names:
+            names.append(name)
+        elif name in names:
+            logging.info('repeat %s' % name)
+            print(name)
+    mysql_db.close()
+    print(len(names))
+
+if __name__ == '__main__':
+    check()
+
