@@ -37,7 +37,7 @@ class AnjukeSpider(scrapy.Spider):
             print("开始区========")
             print(url)
             yield scrapy.Request(url=url, headers=self.headers, callback=self.town, meta={'name': name})
-            time.sleep(random.randint(3,10))
+            time.sleep(random.randint(1,3))
 
     def town(self, response):
         global page_num
@@ -47,7 +47,7 @@ class AnjukeSpider(scrapy.Spider):
         for name, url in zip(town_names, town_urls):
             print("开始镇==========="+ url)
             yield scrapy.Request(url=url, headers=self.headers, callback=self.town_data)
-            time.sleep(random.randint(3, 10))
+            time.sleep(random.randint(1, 3))
 
     def town_data(self, response):
         ershou = ajk()
@@ -108,7 +108,7 @@ class AnjukeSpider(scrapy.Spider):
             url = next_link[0]
             page_num = page_num + 1
             print('next page ============='+url)
-            time.sleep(random.randint(3,10))
+            time.sleep(random.randint(1,3))
             yield scrapy.Request(url=url, headers=self.headers, callback=self.town_data)
 
     def get_year(self,txt):
