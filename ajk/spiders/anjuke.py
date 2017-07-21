@@ -14,6 +14,7 @@ class AnjukeSpider(scrapy.Spider):
     page_num = 1
     name = 'anjuke'
     url = 'http://shanghai.anjuke.com/community/?from=navigation'
+#   handle_httpstatus_list = [414]
     headers = {
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
         'accept-encoding': 'gzip, deflate, sdch',
@@ -35,8 +36,8 @@ class AnjukeSpider(scrapy.Spider):
         for name, url in zip(district_name, district_url):
             print("开始区========")
             print(url)
-            yield scrapy.Request(url=url, callback=self.town, meta={'name': name},headers=self.headers)
-            time.sleep(random.randint(3,5))
+            yield scrapy.Request(url=url, headers=self.headers, callback=self.town, meta={'name': name})
+            time.sleep(random.randint(3,10))
 
     def town(self, response):
         global page_num
@@ -45,8 +46,8 @@ class AnjukeSpider(scrapy.Spider):
         page_num  = 1
         for name, url in zip(town_names, town_urls):
             print("开始镇==========="+ url)
-            yield scrapy.Request(url=url, callback=self.town_data,headers=self.headers)
-            time.sleep(random.randint(3, 5))
+            yield scrapy.Request(url=url, headers=self.headers, callback=self.town_data)
+            time.sleep(random.randint(3, 10))
 
     def town_data(self, response):
         ershou = ajk()
@@ -67,13 +68,16 @@ class AnjukeSpider(scrapy.Spider):
             bdaddr = data.xpath('div[@class="li-info"]/address/text()').extract()
             if name:
                 names.append(name[0])
-                gpslocation = self.get_gps(name[0])
-                if gpslocation:
-                    lats.append(gpslocation['lat'])
-                    lngs.append(gpslocation['lng'])
-                elif not gpslocation:
-                    lats.append(' ')
-                    lngs.append(' ')
+#                gpslocation = self.get_gps(name[0])
+#                if gpslocation:
+#                    lats.append(gpslocation['lat'])
+#                    lngs.append(gpslocation['lng'])
+#                elif not gpslocation:
+#                    lats.append(' ')
+#                    lngs.append(' ')
+            lats.append(' ')
+            lngs.append(' ')
+
             if price:
                 prices.append(price[0])
             elif not price:
@@ -104,8 +108,8 @@ class AnjukeSpider(scrapy.Spider):
             url = next_link[0]
             page_num = page_num + 1
             print('next page ============='+url)
-            time.sleep(random.randint(3,5))
-            yield scrapy.Request(url=url, callback=self.town_data,headers=self.headers)
+            time.sleep(random.randint(3,10))
+            yield scrapy.Request(url=url, headers=self.headers, callback=self.town_data)
 
     def get_year(self,txt):
          pattern = re.compile(r"\d{4}")
@@ -113,7 +117,7 @@ class AnjukeSpider(scrapy.Spider):
          return res
 
     def get_gps(self,txt):
-        s=requests.session()
+        s = requests.session()  
         url = 'http://api.map.baidu.com/place/v2/suggestion?query='+txt+'&region=上海&city_limit=true&output=json&ak=EGOQlsLbQxqQZ9lYTZHS1akgvs0K5hT9'
         header = {'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0'}  
         response = s.get(url, headers = header, timeout = 20)  

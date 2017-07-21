@@ -30,7 +30,7 @@ CONCURRENT_REQUESTS = 1
 DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 CONCURRENT_REQUESTS_PER_DOMAIN = 1
-# CONCURRENT_REQUESTS_PER_IP = 3
+#CONCURRENT_REQUESTS_PER_IP = 1
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
@@ -44,24 +44,25 @@ COOKIES_ENABLED = False
 #   'Accept-Language': 'en',
 #}
 
+#REDIRECT_ENABLED = True
+#REDIRECT_MAX_TIMES = 20
+
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
 #    'ajk.middlewares.AjkSpiderMiddleware': 543,
 #}
 
-
-#CRAWLERA_ENABLED = True
-#CRAWLERA_APIKEY = '1a4420ec42694c77985438890a4779ce'
-
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-#'scrapy_crawlera.CrawleraMiddleware':600,
 #    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 100,
 #'ajk.middlewares.ProxyMiddleware': 200,
-'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 300,
+# 'scrapy_crawlera.CrawleraMiddleware':600,
+#     'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 300,
 #    'anjuke.middlewares.MyCustomDownloaderMiddleware': None,
+     'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware' : None,
+     'ajk.rotate_useragent.RotateUserAgentMiddleware' :400
 }
 
 # Enable or disable extensions
@@ -96,3 +97,5 @@ AUTOTHROTTLE_START_DELAY = 5
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+#CRAWLERA_ENABLED = True
+#CRAWLERA_APIKEY = 'your_apikey'

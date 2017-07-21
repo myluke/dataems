@@ -58,10 +58,10 @@ class AjkSpiderMiddleware(object):
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
 
-proxyServer = "http://proxy.crawlera.com:8010"
+proxyServer = "http://proxy.abuyun.com:9020"
 
-proxyUser = "1a4420ec42694c77985438890a4779ce"
-proxyPass = "Zetta12345"
+proxyUser = "H9TY0MUM83L098JD"
+proxyPass = "11D73012477B337E"
 
 proxyAuth = "Basic " + base64.urlsafe_b64encode(bytes((proxyUser + ":" + proxyPass), "ascii")).decode("utf8")
 
@@ -72,3 +72,6 @@ class ProxyMiddleware(HttpProxyMiddleware):
         request.meta["proxy"] = proxyServer
         request.headers["Proxy-Authorization"] = proxyAuth
         #print(request.headers)
+
+
+
