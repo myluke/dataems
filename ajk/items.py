@@ -18,3 +18,4 @@ class AjkItem(scrapy.Item):
     house_lat = scrapy.Field()
     house_lng = scrapy.Field()
     craw_date = scrapy.Field()
+    source_web = scrapy.Field()

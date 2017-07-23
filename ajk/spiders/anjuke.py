@@ -101,6 +101,7 @@ class AnjukeSpider(scrapy.Spider):
             ershou['house_lat'] = block_lat 
             ershou['house_lng'] = block_lng 
             ershou['craw_date'] = block_date
+            ershou['source_web'] = "anjuke" 
             yield ershou
         next_link = response.xpath('//div[@class="multi-page"]/a[contains(text(), "下一页")]/@href').extract()
         print(next_link)
