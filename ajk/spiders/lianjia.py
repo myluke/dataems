@@ -55,18 +55,12 @@ class LianjiaSpider(scrapy.Spider):
                 if bdaddr[0]:
                     tmp = re.findall("[-+]?\d+[\.]?\d*",bdaddr[0])
                     if tmp:
-                        if tmp[0]:
-                            lngs.append(tmp[0])
-                        elif not tmp[0]:
-                            lngs.append(" ")
-                        if tmp[1]:
-                            lats.append(tmp[1])
-                        elif not tmp[1]:
-                            lats.append(" ")
-                    elif not tmp:
+                        lngs.append(tmp[0])
+                        lats.append(tmp[1])
+                    else:
                         lats.append(" ")
                         lngs.append(" ")
-                elif not bdaddr[0]:
+                else:
                     lats.append(" ")
                     lngs.append(" ")
                     
@@ -106,8 +100,7 @@ class LianjiaSpider(scrapy.Spider):
             ershou['craw_date'] = block_date
             ershou['source_web'] = "lianjia"
             yield ershou
-            next_link = response.xpath('//div[@class="page-box house-list-page-box"]/a[contains(text(), "下一页")]/@href').extract()
-            print(next_link)
+            next_link = response.xpath('//div[@class="page-box house-lst-page-box"]/a[contains(text(), "下一页")]/@href').extract()
             if next_link:
                 url = next_link[0]
                 print('next page ============='+url)
