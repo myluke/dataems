@@ -51,7 +51,7 @@ class LianjiaSpider(scrapy.Spider):
             bddistrict = data.xpath('div[@class="info-panel"]/div[@class="col-1"]/div[@class="where"]/a[@class="actshowMap_list"]/@districtname').extract()
             bdyear =     data.xpath('div[@class="info-panel"]/div[@class="col-1"]/div[@class="other"]/div[@class="con"]/text()').extract()
             if name:
-                names.append(name[0])
+                names.append(name[0].strip().rstrip().lstrip())
                 if bdaddr[0]:
                     tmp = re.findall("[-+]?\d+[\.]?\d*",bdaddr[0])
                     if tmp:
