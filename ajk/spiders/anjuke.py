@@ -16,20 +16,21 @@ class AnjukeSpider(scrapy.Spider):
     name = 'anjuke'
     url = 'http://shanghai.anjuke.com/community/?from=navigation'
 #   handle_httpstatus_list = [414]
-    headers = {
-        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'accept-encoding': 'gzip, deflate, sdch',
-        'accept-language': 'zh-CN,zh;q=0.8',
-        'q': '0.8',
-        "Connection": "keep-alive",
-        'cache-control': 'max - age = 0',
-        'referer': 'http://shanghai.anjuke.com',
-        'upgrade-insecure-requests': '1',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
-    }
-
+#    headers = {
+#        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+#        'accept-encoding': 'gzip, deflate, sdch',
+#        'accept-language': 'zh-CN,zh;q=0.8',
+#        'q': '0.8',
+#        "Connection": "keep-alive",
+#        'cache-control': 'max - age = 0',
+#        'referer': 'http://shanghai.anjuke.com',
+#        'upgrade-insecure-requests': '1',
+#        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+#    }
+#
     def start_requests(self):
-        yield scrapy.Request(url=self.url, callback=self.parse, headers=self.headers)
+        yield scrapy.Request(url=self.url, callback=self.parse)
+        #yield scrapy.Request(url=self.url, callback=self.parse, headers=self.headers)
 
     def parse(self, response):
         district_name = response.xpath('//span[@class="item-title" and contains(text(), "区域")]/../span[@class="elems-l"]/a[@class="" and @href!="https://shanghai.anjuke.com/community/shanghaizhoubian"]/text()').extract()
@@ -37,7 +38,7 @@ class AnjukeSpider(scrapy.Spider):
         for name, url in zip(district_name, district_url):
             print("开始区========")
             print(url)
-            yield scrapy.Request(url=url, headers=self.headers, callback=self.town, meta={'name': name})
+            yield scrapy.Request(url=url, callback=self.town, meta={'name': name})
             time.sleep(random.randint(1,3))
 
     def town(self, response):
@@ -47,7 +48,7 @@ class AnjukeSpider(scrapy.Spider):
         page_num  = 1
         for name, url in zip(town_names, town_urls):
             print("开始镇==========="+ url)
-            yield scrapy.Request(url=url, headers=self.headers, callback=self.town_data)
+            yield scrapy.Request(url=url, callback=self.town_data)
             time.sleep(random.randint(1, 3))
 
     def town_data(self, response):
@@ -122,7 +123,7 @@ class AnjukeSpider(scrapy.Spider):
             page_num = page_num + 1
             print('next page ============='+url)
             time.sleep(random.randint(1,3))
-            yield scrapy.Request(url=url, headers=self.headers, callback=self.town_data)
+            yield scrapy.Request(url=url, callback=self.town_data)
 
     def get_year(self,txt):
          pattern = re.compile(r"\d{4}")
