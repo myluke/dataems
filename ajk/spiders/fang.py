@@ -41,6 +41,7 @@ class FangSpider(scrapy.Spider):
         prices = []
         bdyears = []
         bdaddrs = []
+        bddists = []
         lats = []
         lngs = []
         cdates=[]
@@ -48,7 +49,7 @@ class FangSpider(scrapy.Spider):
             print("开始小区=========")
             name = data.xpath('dl[@class="plotListwrap clearfix"]/dd/p/a[@class="plotTit"]/text()').extract()         
             price = data.xpath('div[@class="listRiconwrap"]/p[@class="priceAverage"]/span[1]/text()').extract()
-            bdaddr = data.xpath('dl[@class="plotListwrap clearfix"]/dd/p[2]/a[1]/text()').extract()
+            bdaddr = data.xpath('dl[@class="plotListwrap clearfix"]/dd/p[2]/text()').extract()
             bddistrict = data.xpath('dl[@class="plotListwrap clearfix"]/dd/p[2]/a[1]/text()').extract()
             bdyear =     data.xpath('dl[@class="plotListwrap clearfix"]/dd/ul[@class="sellOrRenthy clearfix"]/li[3]/text()').extract()
             if name:
@@ -56,7 +57,8 @@ class FangSpider(scrapy.Spider):
                 lats.append(" ")
                 lngs.append(" ")
                     
-                bdaddrs.append(bddistrict[0])
+                bddists.append(bddistrict[0])
+                bdaddrs.append("  ")
 
                 if bdyear:
                     bdyears.append(bdyear[0])
@@ -74,11 +76,12 @@ class FangSpider(scrapy.Spider):
                 dt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 cdates.append(dt)
             
-        for block_name, block_price,block_bdyear,block_bdaddr,block_lat,block_lng,block_date in zip(names, prices, bdyears,bdaddrs,lats,lngs,cdates):
+        for block_name, block_price,block_bdyear,block_bdaddr,block_bddist,block_lat,block_lng,block_date in zip(names, prices, bdyears,bdaddrs,bddists,lats,lngs,cdates):
             ershou['house_name'] = block_name
             ershou['house_price'] = block_price
             ershou['house_bdyear'] = block_bdyear
             ershou['house_bdaddr'] = block_bdaddr
+            ershou['house_bddist'] = block_bddist
             ershou['house_lat'] = block_lat
             ershou['house_lng'] = block_lng
             ershou['craw_date'] = block_date

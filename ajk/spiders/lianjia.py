@@ -95,6 +95,7 @@ class LianjiaSpider(scrapy.Spider):
             ershou['house_price'] = block_price
             ershou['house_bdyear'] = block_bdyear
             ershou['house_bdaddr'] = block_bdaddr
+            ershou['house_bddist'] = block_bdaddr
             ershou['house_lat'] = block_lat
             ershou['house_lng'] = block_lng
             ershou['craw_date'] = block_date
