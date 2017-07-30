@@ -5,6 +5,7 @@ import time
 from ajk.items import AjkItem as ajk
 import random
 import scrapy.http.response
+import unicodedata
 import re
 import requests
 import json
@@ -58,6 +59,7 @@ class AnjukeSpider(scrapy.Spider):
         prices = []
         bdyears = []
         bdaddrs = []
+        bddists = []
         lats = []
         lngs = []
         cdates=[]
@@ -87,17 +89,27 @@ class AnjukeSpider(scrapy.Spider):
             elif not bdyear:
                 bdyears.append('9999')
             if bdaddr:
-                bdaddrs.append(bdaddr[0].strip().lstrip().rstrip())
-            elif not bdaddr:
+                address=bdaddr[0].strip().lstrip().rstrip()
+                address=unicodedata.normalize('NFKC',address)
+                print(address)
+                m=re.findall("\[.+\-",address)
+                bddists.append(m[0].replace("[","").replace("-","").replace("]",""))
+
+                m=re.findall("\].*",address)
+                bdaddrs.append(m[0].replace("[","").replace("]","").lstrip())
+            else:
                 bdaddrs.append('暂无地址')
+                bddists.append('暂无地址')
+
             dt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  
             cdates.append(dt)
         assert len(names) == len(prices)
-        for block_name, block_price,block_bdyear,block_bdaddr,block_lat,block_lng,block_date in zip(names, prices, bdyears,bdaddrs,lats,lngs,cdates):
+        for block_name, block_price,block_bdyear,block_bdaddr,block_bddist,block_lat,block_lng,block_date in zip(names, prices, bdyears,bdaddrs,bddists,lats,lngs,cdates):
             ershou['house_name'] = block_name
             ershou['house_price'] = block_price
             ershou['house_bdyear'] = block_bdyear
             ershou['house_bdaddr'] = block_bdaddr
+            ershou['house_bddist'] = block_bddist
             ershou['house_lat'] = block_lat 
             ershou['house_lng'] = block_lng 
             ershou['craw_date'] = block_date

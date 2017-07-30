@@ -38,11 +38,7 @@ COOKIES_ENABLED = False
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
 
-# Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-#   'Accept-Language': 'en',
-#}
+#Override the default request headers:
 
 #REDIRECT_ENABLED = True
 #REDIRECT_MAX_TIMES = 20
@@ -57,12 +53,12 @@ COOKIES_ENABLED = False
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
 #    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 100,
-#'ajk.middlewares.ProxyMiddleware': 200,
+'ajk.middlewares.ProxyMiddleware': 200,
 # 'scrapy_crawlera.CrawleraMiddleware':600,
 #     'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 300,
 #    'anjuke.middlewares.MyCustomDownloaderMiddleware': None,
 #     'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware' : None,
-     'ajk.rotate_useragent.RotateUserAgentMiddleware' :400
+#     'ajk.rotate_useragent.RotateUserAgentMiddleware' :400
 }
 
 # Enable or disable extensions
