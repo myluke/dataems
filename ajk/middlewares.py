@@ -60,8 +60,8 @@ class AjkSpiderMiddleware(object):
 
 proxyServer = "http://proxy.abuyun.com:9020"
 
-proxyUser = "H9TY0MUM83L098JD"
-proxyPass = "11D73012477B337E"
+proxyUser = "H8SI93L500655MYD"
+proxyPass = "05AC49FA1401E41B"
 
 proxyAuth = "Basic " + base64.urlsafe_b64encode(bytes((proxyUser + ":" + proxyPass), "ascii")).decode("utf8")
 

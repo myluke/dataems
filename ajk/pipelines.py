@@ -29,18 +29,19 @@ class AjkPipeline(object):
     #     return item
     # 存入MySQL
     def process_item(self, item, spider):
-        sql = 'insert into sp_anjuke(house_name, house_price, house_bdyear, house_bdaddr,house_lat,house_lng,craw_date,source_web) values (%s, %s, %s, %s,%s,%s,%s,%s)'
+        sql = 'insert into sp_anjuke(house_name, house_price, house_bdyear, house_bdaddr,house_bddist,house_lat,house_lng,craw_date,source_web) values (%s,%s, %s, %s, %s,%s,%s,%s,%s)'
         name = item['house_name']
         price = item['house_price']
         bdyear = item['house_bdyear']
         bdaddr = item['house_bdaddr']
+        bddist = item['house_bddist']
         lat = item['house_lat']
         lng = item['house_lng']
         cdate = item['craw_date']
         source = item['source_web']
-        print(name, price,bdyear, bdaddr,lat,lng,cdate)
+        print(name, price,bdyear, bdaddr,bddist,lat,lng,cdate)
         try:
-            self.cursor.execute(sql, (name, price,bdyear,bdaddr,lat,lng,cdate,source))
+            self.cursor.execute(sql, (name, price,bdyear,bdaddr,bddist,lat,lng,cdate,source))
             self.mysql_db.commit()
         except:
             self.mysql_db.rollback()

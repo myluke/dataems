@@ -5,6 +5,7 @@ import time
 from ajk.items import AjkItem as ajk
 import random
 import scrapy.http.response
+import unicodedata
 import re
 import requests
 import json
@@ -14,7 +15,7 @@ class AnjukeSpider(scrapy.Spider):
     page_num = 1
     name = 'anjuke'
     url = 'http://shanghai.anjuke.com/community/?from=navigation'
-#   handle_httpstatus_list = [414]
+    handle_httpstatus_list = [414]
     headers = {
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
         'accept-encoding': 'gzip, deflate, sdch',
@@ -28,7 +29,8 @@ class AnjukeSpider(scrapy.Spider):
     }
 
     def start_requests(self):
-        yield scrapy.Request(url=self.url, callback=self.parse, headers=self.headers)
+        yield scrapy.Request(url=self.url, callback=self.parse)
+        #yield scrapy.Request(url=self.url, callback=self.parse, headers=self.headers)
 
     def parse(self, response):
         district_name = response.xpath('//span[@class="item-title" and contains(text(), "区域")]/../span[@class="elems-l"]/a[@class="" and @href!="https://shanghai.anjuke.com/community/shanghaizhoubian"]/text()').extract()
@@ -36,12 +38,10 @@ class AnjukeSpider(scrapy.Spider):
         count = 1
         dy = int(datetime.date.today().day)
         for name, url in zip(district_name, district_url):
-            if (dy==count):
-                print("开始区========")
-                print(url)
-                yield scrapy.Request(url=url, headers=self.headers, callback=self.town, meta={'name': name})
-                time.sleep(random.randint(1,3))
-            count=count+1
+            print("开始区========")
+            print(url)
+            yield scrapy.Request(url=url, headers=self.headers, callback=self.town, meta={'name': name})
+            time.sleep(random.randint(1,3))
 
     def town(self, response):
         global page_num
@@ -50,7 +50,7 @@ class AnjukeSpider(scrapy.Spider):
         page_num  = 1
         for name, url in zip(town_names, town_urls):
             print("开始镇==========="+ url)
-            yield scrapy.Request(url=url, headers=self.headers, callback=self.town_data)
+            yield scrapy.Request(url=url, callback=self.town_data)
             time.sleep(random.randint(1, 3))
 
     def town_data(self, response):
@@ -62,6 +62,7 @@ class AnjukeSpider(scrapy.Spider):
         prices = []
         bdyears = []
         bdaddrs = []
+        bddists = []
         lats = []
         lngs = []
         cdates=[]
@@ -91,17 +92,27 @@ class AnjukeSpider(scrapy.Spider):
             elif not bdyear:
                 bdyears.append('9999')
             if bdaddr:
-                bdaddrs.append(bdaddr[0].strip().lstrip().rstrip())
-            elif not bdaddr:
+                address=bdaddr[0].strip().lstrip().rstrip()
+                address=unicodedata.normalize('NFKC',address)
+                print(address)
+                m=re.findall("\[.+\-",address)
+                bddists.append(m[0].replace("[","").replace("-","").replace("]",""))
+
+                m=re.findall("\].*",address)
+                bdaddrs.append(m[0].replace("[","").replace("]","").lstrip())
+            else:
                 bdaddrs.append('暂无地址')
+                bddists.append('暂无地址')
+
             dt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  
             cdates.append(dt)
         assert len(names) == len(prices)
-        for block_name, block_price,block_bdyear,block_bdaddr,block_lat,block_lng,block_date in zip(names, prices, bdyears,bdaddrs,lats,lngs,cdates):
+        for block_name, block_price,block_bdyear,block_bdaddr,block_bddist,block_lat,block_lng,block_date in zip(names, prices, bdyears,bdaddrs,bddists,lats,lngs,cdates):
             ershou['house_name'] = block_name
             ershou['house_price'] = block_price
             ershou['house_bdyear'] = block_bdyear
             ershou['house_bdaddr'] = block_bdaddr
+            ershou['house_bddist'] = block_bddist
             ershou['house_lat'] = block_lat 
             ershou['house_lng'] = block_lng 
             ershou['craw_date'] = block_date
@@ -114,7 +125,7 @@ class AnjukeSpider(scrapy.Spider):
             page_num = page_num + 1
             print('next page ============='+url)
             time.sleep(random.randint(1,3))
-            yield scrapy.Request(url=url, headers=self.headers, callback=self.town_data)
+            yield scrapy.Request(url=url, callback=self.town_data)
 
     def get_year(self,txt):
          pattern = re.compile(r"\d{4}")

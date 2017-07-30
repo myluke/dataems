@@ -15,6 +15,7 @@ class AjkItem(scrapy.Item):
     house_price = scrapy.Field()
     house_bdyear = scrapy.Field()
     house_bdaddr = scrapy.Field()
+    house_bddist = scrapy.Field()
     house_lat = scrapy.Field()
     house_lng = scrapy.Field()
     craw_date = scrapy.Field()
