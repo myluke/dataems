@@ -33,11 +33,15 @@ class AnjukeSpider(scrapy.Spider):
     def parse(self, response):
         district_name = response.xpath('//span[@class="item-title" and contains(text(), "区域")]/../span[@class="elems-l"]/a[@class="" and @href!="https://shanghai.anjuke.com/community/shanghaizhoubian"]/text()').extract()
         district_url = response.xpath('//span[@class="item-title" and contains(text(), "区域")]/../span[@class="elems-l"]/a[@class="" and @href!="https://shanghai.anjuke.com/community/shanghaizhoubian"]/@href').extract()
+        count = 1
+        dy = int(datetime.date.today().day)
         for name, url in zip(district_name, district_url):
-            print("开始区========")
-            print(url)
-            yield scrapy.Request(url=url, headers=self.headers, callback=self.town, meta={'name': name})
-            time.sleep(random.randint(1,3))
+            if (dy==count):
+                print("开始区========")
+                print(url)
+                yield scrapy.Request(url=url, headers=self.headers, callback=self.town, meta={'name': name})
+                time.sleep(random.randint(1,3))
+            count=count+1
 
     def town(self, response):
         global page_num
