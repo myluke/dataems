@@ -9,9 +9,9 @@ MySQL_HOST = 'localhost'
 MySQL_PORT = 3306
 
 def check():
-    mysql_db = pymysql.connect(host=MySQL_HOST, port=MySQL_PORT, user='root', password='Zetta12345', database='ajk', charset='utf8')
+    mysql_db = pymysql.connect(host=MySQL_HOST, port=MySQL_PORT, user='root', password='Zetta12345', database='scrapymanager', charset='utf8')
     cursor = mysql_db.cursor()
-    cursor.execute("SELECT * from anjuke where source_web='fang' or source_web='anjuke'")
+    cursor.execute("SELECT * from sp_anjuke where source_web='fang' or source_web='anjuke'")
     rows = cursor.fetchall()
     print(cursor.rowcount)
     for row in rows:
@@ -22,7 +22,7 @@ def check():
             lat = gps["lat"]
             lng = gps["lng"]
             try:
-                cursor.execute("UPDATE anjuke SET house_lat=%s,house_lng=%s WHERE id=%s ",(lat,lng,ajk_id))
+                cursor.execute("UPDATE sp_anjuke SET house_lat=%s,house_lng=%s WHERE id=%s ",(lat,lng,ajk_id))
                 mysql_db.commit()
                 print(ajk_id,ajk_name,lat,lng)
             except Exception as e:
