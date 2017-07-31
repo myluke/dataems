@@ -33,9 +33,8 @@ class AnjukeSpider(scrapy.Spider):
         #yield scrapy.Request(url=self.url, callback=self.parse, headers=self.headers)
 
     def parse(self, response):
-        district_name = response.xpath('//span[@class="item-title" and contains(text(), "区域")]/../span[@class="elems-l"]/a[@class="" and @href!="https://shanghai.anjuke.com/community/shanghaizhoubian"]/text()').extract()
-        district_url = response.xpath('//span[@class="item-title" and contains(text(), "区域")]/../span[@class="elems-l"]/a[@class="" and @href!="https://shanghai.anjuke.com/community/shanghaizhoubian"]/@href').extract()
-        count = 1
+        district_name = response.xpath('//span[@class="item-title" and contains(text(), "区域")]/../span[@class="elems-l"]/a[@class="" and not(contains(text(),"周边"))]/text()').extract()
+        district_url = response.xpath('//span[@class="item-title" and contains(text(), "区域")]/../span[@class="elems-l"]/a[@class="" and not(contains(text(),"周边"))]/@href').extract()
         dy = int(datetime.date.today().day)
         for name, url in zip(district_name, district_url):
             print("开始区========")

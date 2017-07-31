@@ -11,7 +11,7 @@ import pymysql
 MONGO_HOST = '127.0.0.1'
 MONGO_PORT = 27017
 
-MySQL_HOST = 'localhost'
+MySQL_HOST = '192.168.1.240'
 MySQL_PORT = 3306
 
 class AjkPipeline(object):
@@ -19,7 +19,7 @@ class AjkPipeline(object):
     db = client['ajk']
     collection_name = 'sanshou'
 
-    mysql_db = pymysql.connect(host=MySQL_HOST, port=MySQL_PORT, user='root', password='Zetta12345', database='scrapymanager',
+    mysql_db = pymysql.connect(host=MySQL_HOST, port=MySQL_PORT, user='dataems', password='Zetta12345', database='scrapymanager',
                                charset='utf8')
     cursor = mysql_db.cursor()
 
@@ -43,7 +43,8 @@ class AjkPipeline(object):
         try:
             self.cursor.execute(sql, (name, price,bdyear,bdaddr,bddist,lat,lng,cdate,source))
             self.mysql_db.commit()
-        except:
+        except e:
+            print(e)
             self.mysql_db.rollback()
         return item
 
