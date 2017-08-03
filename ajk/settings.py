@@ -51,15 +51,15 @@ COOKIES_ENABLED = False
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
+#DOWNLOADER_MIDDLEWARES = {
 #    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 100,
 #    'ajk.middlewares.ProxyMiddleware': 200,
 #    'scrapy_crawlera.CrawleraMiddleware':600,
-     'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 300,
+#     'scrapy_fake_useragent.middleware.RandomUserAgentMiddleware': 300,
 #    'anjuke.middlewares.MyCustomDownloaderMiddleware': None,
-#     'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware' : None,
+#    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware' : None,
 #     'ajk.rotate_useragent.RotateUserAgentMiddleware' :400
-}
+#}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html

@@ -43,7 +43,7 @@ class AjkPipeline(object):
         try:
             self.cursor.execute(sql, (name, price,bdyear,bdaddr,bddist,lat,lng,cdate,source))
             self.mysql_db.commit()
-        except e:
+        except Exception as e:
             print(e)
             self.mysql_db.rollback()
         return item
