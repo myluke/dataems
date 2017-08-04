@@ -11,7 +11,7 @@ MySQL_PORT = 3306
 def check():
     mysql_db = pymysql.connect(host=MySQL_HOST, port=MySQL_PORT, user='dataems', password='Zetta12345', database='scrapymanager', charset='utf8')
     cursor = mysql_db.cursor()
-    cursor.execute("SELECT * from sp_anjuke where source_web='fang' or source_web='anjuke'")
+    cursor.execute("SELECT * from sp_anjuke where source_web='fang' or source_web='anjuke' and length(house_lat)<=1")
     rows = cursor.fetchall()
     print(cursor.rowcount)
     for row in rows:
@@ -39,7 +39,10 @@ def get_gps(txt):
         url = 'http://api.map.baidu.com/place/v2/suggestion?query='+txt+'&region=上海&city_limit=true&output=json&ak=EGOQlsLbQxqQZ9lYTZHS1akgvs0K5hT9'
         header = {'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0'}  
         response = s.get(url, headers = header, timeout = 20)  
-        data = json.loads(response.text)  
+        try:
+            data = json.loads(response.text)  
+        except Exception as e:
+            print(e)
         if data is not None:
             print(data)  
             if len(data['result'])>0:
